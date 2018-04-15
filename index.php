@@ -71,7 +71,6 @@
 				<ul>
 					<li>articleID (primary key)</li>
 					<li>articleAuthorId (foreign key)</li>
-					<li>articleAuthorId (foreign key)</li>
 					<li>articleTitle</li>
 					<li>articleDate</li>
 					<li>articleTags</li>
@@ -80,7 +79,7 @@
 				</ul>
 			</ul>
 			<h2>Relations</h2>
-			<p>Many authors can write many articles. (<em>m</em>&nbsp;to&nbsp;<em>n</em>)</p>
+			<p>One author can write many articles. (<em>1</em>&nbsp;to&nbsp;<em>n</em>)</p>
 		</div>
 	</body>
 </html>
