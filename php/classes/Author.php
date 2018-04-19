@@ -25,38 +25,38 @@ class Author implements \JsonSerializable {
 	 * @var uuid $authorID
 	 *
 	 **/
-	private $authorID;
+	protected $authorID;
 
 	/**
 	 * a brief section of information about the author of an article
 	 * @var string $authorBio
 	 **/
-	private $authorBio;
+	protected $authorBio;
 
 	/**
 	 * the author's email address used for authentication NOT to be confused with a public facing email for contact.
 	 * This must be unique
 	 * @var string $authorEmail
 	 **/
-	private $authorEmail;
+	protected $authorEmail;
 
 	/**
 	 * The hash used for password encryption; user authentication
 	 * @var char(97) $authorHash
 	 **/
-	private $authorHash;
+	protected $authorHash;
 
 	/**
 	 * A profile image of the author to be displayed with the author's bio
 	 * @var longblob $authorImage
 	 **/
-	private $authorImage;
+	protected $authorImage;
 
 	/**
 	 * The author's name as opposed to a user handle
 	 * @var varchar(32) $authorName
 	 **/
-	private $authorName;
+	protected $authorName;
 
 	/**
 	 * @return uuid
@@ -90,7 +90,7 @@ class Author implements \JsonSerializable {
 	 * @return string
 	 */
 	public function getAuthorEmail(): string {
-		return ($this->authorEmail);
+		return($this->authorEmail);
 	}
 
 	/**
@@ -103,42 +103,42 @@ class Author implements \JsonSerializable {
 	/**
 	 * @return string
 	 */
-	public function getAuthorHash(): char {
-		return ($this->authorHash);
+	public function getAuthorHash(): string {
+		return($this->authorHash);
 	}
 
 	/**
 	 * @param string $authorHash
 	 */
-	public function setAuthorHash(char $authorHash): void {
+	public function setAuthorHash(string $authorHash): void {
 		$this->authorHash = $authorHash;
 	}
 
 	/**
 	 * @return string
 	 */
-	public function getAuthorImage(): longblob {
+	public function getAuthorImage(): string {
 		return ($this->authorImage);
 	}
 
 	/**
 	 * @param string $authorImage
 	 */
-	public function setAuthorImage(longblob $authorImage): void {
+	public function setAuthorImage(string $authorImage): void {
 		$this->authorImage = $authorImage;
 	}
 
 	/**
 	 * @return string
 	 */
-	public function getAuthorName(): varchar {
+	public function getAuthorName(): string {
 		return ($this->authorName);
 	}
 
 	/**
 	 * @param string $authorName
 	 */
-	public function setAuthorName(varchar $authorName): void {
+	public function setAuthorName(string $authorName): void {
 		$this->authorName = $authorName;
 	}
 
@@ -155,9 +155,3 @@ class Author implements \JsonSerializable {
 	}
 }
 
-$markTwain = new Author();
-
-$markTwain->setAuthorName("Sam Clemens");
-$markTwain->setAuthorEmail("boat@mississippi.net");
-
-echo $markTwain->getAuthorEmail() . $markTwain->getAuthorName();
