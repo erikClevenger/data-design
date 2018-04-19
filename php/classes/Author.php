@@ -59,6 +59,91 @@ class Author implements \JsonSerializable {
 	private $authorName;
 
 	/**
+	 * @return uuid
+	 */
+	public function getAuthorID(): uuid {
+		return ($this->authorID);
+	}
+
+	/**
+	 * @param uuid $authorID
+	 */
+	public function setAuthorID(uuid $authorID): void {
+		$this->authorID = $authorID;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getAuthorBio(): string {
+		return ($this->authorBio);
+	}
+
+	/**
+	 * @param string $authorBio
+	 */
+	public function setAuthorBio(string $authorBio): void {
+		$this->authorBio = $authorBio;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getAuthorEmail(): string {
+		return ($this->authorEmail);
+	}
+
+	/**
+	 * @param string $authorEmail
+	 */
+	public function setAuthorEmail(string $authorEmail): void {
+		$this->authorEmail = $authorEmail;
+	}
+
+	/**
+	 * @return char
+	 */
+	public function getAuthorHash(): char {
+		return ($this->authorHash);
+	}
+
+	/**
+	 * @param char $authorHash
+	 */
+	public function setAuthorHash(char $authorHash): void {
+		$this->authorHash = $authorHash;
+	}
+
+	/**
+	 * @return longblob
+	 */
+	public function getAuthorImage(): longblob {
+		return ($this->authorImage);
+	}
+
+	/**
+	 * @param longblob $authorImage
+	 */
+	public function setAuthorImage(longblob $authorImage): void {
+		$this->authorImage = $authorImage;
+	}
+
+	/**
+	 * @return varchar
+	 */
+	public function getAuthorName(): varchar {
+		return ($this->authorName);
+	}
+
+	/**
+	 * @param varchar $authorName
+	 */
+	public function setAuthorName(varchar $authorName): void {
+		$this->authorName = $authorName;
+	}
+
+
+	/**
 	 * Specify data which should be serialized to JSON
 	 * @link http://php.net/manual/en/jsonserializable.jsonserialize.php
 	 * @return mixed data which can be serialized by <b>json_encode</b>,
