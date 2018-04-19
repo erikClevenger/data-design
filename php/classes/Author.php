@@ -101,42 +101,42 @@ class Author implements \JsonSerializable {
 	}
 
 	/**
-	 * @return char
+	 * @return string
 	 */
 	public function getAuthorHash(): char {
 		return ($this->authorHash);
 	}
 
 	/**
-	 * @param char $authorHash
+	 * @param string $authorHash
 	 */
 	public function setAuthorHash(char $authorHash): void {
 		$this->authorHash = $authorHash;
 	}
 
 	/**
-	 * @return longblob
+	 * @return string
 	 */
 	public function getAuthorImage(): longblob {
 		return ($this->authorImage);
 	}
 
 	/**
-	 * @param longblob $authorImage
+	 * @param string $authorImage
 	 */
 	public function setAuthorImage(longblob $authorImage): void {
 		$this->authorImage = $authorImage;
 	}
 
 	/**
-	 * @return varchar
+	 * @return string
 	 */
 	public function getAuthorName(): varchar {
 		return ($this->authorName);
 	}
 
 	/**
-	 * @param varchar $authorName
+	 * @param string $authorName
 	 */
 	public function setAuthorName(varchar $authorName): void {
 		$this->authorName = $authorName;
@@ -154,3 +154,10 @@ class Author implements \JsonSerializable {
 		// TODO: Implement jsonSerialize() method.
 	}
 }
+
+$markTwain = new Author();
+
+$markTwain->setAuthorName("Sam Clemens");
+$markTwain->setAuthorEmail("boat@mississippi.net");
+
+echo $markTwain->getAuthorEmail() . $markTwain->getAuthorName();
