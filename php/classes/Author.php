@@ -67,8 +67,20 @@ class Author implements \JsonSerializable {
 	 *
 	 **/
 
-	public function __construct() {
-
+	public function __construct($args = []) {
+		try {
+			$this->authorID = ['uuid'];
+			$this->authorBio = ['bio'] ?? NULL;
+			$this->authorEmail = ['email'];
+			$this->authorHash = ['hash'];
+			$this->authorImage = ['image'] ?? NULL;
+			$this->authorName = ['name'];
+			}
+			//determine what exception type was thrown
+		catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
+			$exceptionType = get_class($exception);
+			throw(new $exceptionType($exception->getMessage(), 0, $exception));
+		}
 	}
 
 
