@@ -62,9 +62,18 @@ class Author implements \JsonSerializable {
 	 *
 	 * Constructor for this Tweet
 	 *
-	 * @param
-	 * @
+	 * Takes an argument of an array. Within the array arguments can
 	 *
+	 * @param string|Uuid $authorId of author
+	 * @param string|null $uthorBio A string containing the author's bio
+	 * @param string $authorEmail providing the author's email
+	 * @param string $authorHash containing the authentication hash
+	 * @param string|null $authorImage an image of the author
+	 * @param string $authorName a string containg the author's name
+	 * @throws \InvalidArgumentException if data types are not valid
+	 * @throws \RangeException if data values are out of bounds (e.g., strings too long, negative integers)
+	 * @throws \TypeError if data types violate type hints
+	 * @throws \Exception if some other exception occurs
 	 **/
 
 	public function __construct($args = []) {
