@@ -59,6 +59,21 @@ class Author implements \JsonSerializable {
 	protected $authorName;
 
 	/**
+	 *
+	 * Constructor for this Tweet
+	 *
+	 * @param
+	 * @
+	 *
+	 **/
+
+	public function __construct() {
+
+	}
+
+
+
+	/**
 	 * @return uuid
 	 */
 	public function getAuthorID(): uuid {
@@ -153,5 +168,7 @@ class Author implements \JsonSerializable {
 	public function jsonSerialize() {
 		// TODO: Implement jsonSerialize() method.
 	}
+
+
 }
 
