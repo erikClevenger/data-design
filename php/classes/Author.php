@@ -1,10 +1,6 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: erik
- * Date: 4/19/18
- * Time: 9:39 AM
- */
+// temp fix
+require_once ("ValidateUuid.php");
 
 /**
  * This is the primary profile type for authors
@@ -219,3 +215,8 @@ class Author implements \JsonSerializable {
 
 }
 
+$testAuthor = new Author;
+$testTest = getAuthorID($testAuthor);
+
+
+echo $testTest;
