@@ -105,8 +105,15 @@ class Author implements \JsonSerializable {
 	/**
 	 * @param uuid $authorID
 	 */
-	public function setAuthorID(Uuid $authorID): void {
-		$this->authorID = $authorID;
+	public function setAuthorID($authorID): void {
+		try {
+			$uuid = self::validateUuid($authorID);
+		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
+			$exceptionType = get_class($exception);
+			throw new $exceptionType($exception->getMessage(), 0, $exception);
+		}
+
+		$this->authorID = $uuid;
 	}
 
 	/**
