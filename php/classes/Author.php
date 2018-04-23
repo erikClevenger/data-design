@@ -19,6 +19,7 @@
  **/
 
 class Author implements \JsonSerializable {
+	use ValidateUuid;
 
 	/**
 	 * id for this Author; this is the primary key
@@ -97,14 +98,14 @@ class Author implements \JsonSerializable {
 	/**
 	 * @return uuid
 	 */
-	public function getAuthorID(): uuid {
+	public function getAuthorID(): Uuid {
 		return ($this->authorID);
 	}
 
 	/**
 	 * @param uuid $authorID
 	 */
-	public function setAuthorID(uuid $authorID): void {
+	public function setAuthorID(Uuid $authorID): void {
 		$this->authorID = $authorID;
 	}
 
@@ -190,6 +191,24 @@ class Author implements \JsonSerializable {
 		// TODO: Implement jsonSerialize() method.
 	}
 
+	/**
+	 * Inserts this Author into mySQL
+	 *
+	 * @param \PDO $pdo PDO connection object
+	 * @throws \PDOException when mySQL related error occurs
+	 * @throws \TypeError if $pdo is not a PDO connection object
+	 **/
+
+	public function insert(\PDO $pdo) : void {
+		//query template
+		$query = "INSERT INTO author ()/ VALUES /* :value values for those arguments here */";
+		$statement = $pdo->prepare($query);
+
+		// bind the member variables to the place holder template
+		$parameters = ["authorID" => $this->authorID->getBytes(), "authorBio" => $this->authorBio, "authorEmail" =>
+			$this->authorEmail, "authorImage" => $this->authorImage, "authorName" => $this->authorName];
+		$statement->execute($parameters);
+	}
 
 }
 
