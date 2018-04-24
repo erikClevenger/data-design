@@ -15,14 +15,14 @@ require_once ("ValidateUuid.php");
  **/
 
 class Author implements \JsonSerializable {
-	use ValidateUuid;
+	use \Edu\Cnm\DataDesign\ValidateUuid;
 
 	/**
 	 * id for this Author; this is the primary key
-	 * @var uuid $authorID
+	 * @var uuid $authorId
 	 *
 	 **/
-	protected $authorID;
+	protected $authorId;
 
 	/**
 	 * a brief section of information about the author of an article
@@ -75,7 +75,7 @@ class Author implements \JsonSerializable {
 
 	public function __construct($args = []) {
 		try {
-			$this->authorID = ['uuid'];
+			$this->authorId = ['uuid'];
 			$this->authorBio = ['bio'] ?? NULL;
 			$this->authorEmail = ['email'];
 			$this->authorHash = ['hash'];
@@ -94,22 +94,22 @@ class Author implements \JsonSerializable {
 	/**
 	 * @return uuid
 	 */
-	public function getAuthorID(): Uuid {
-		return ($this->authorID);
+	public function getauthorId(): Uuid {
+		return ($this->authorId);
 	}
 
 	/**
-	 * @param uuid $authorID
+	 * @param uuid $authorId
 	 */
-	public function setAuthorID($authorID): void {
+	public function setauthorId($authorId): void {
 		try {
-			$uuid = self::validateUuid($authorID);
+			$uuid = self::validateUuid($authorId);
 		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
 			$exceptionType = get_class($exception);
 			throw new $exceptionType($exception->getMessage(), 0, $exception);
 		}
 
-		$this->authorID = $uuid;
+		$this->authorId = $uuid;
 	}
 
 	/**
@@ -202,21 +202,28 @@ class Author implements \JsonSerializable {
 	 * @throws \TypeError if $pdo is not a PDO connection object
 	 **/
 
+	/*
+
 	public function insert(\PDO $pdo) : void {
 		//query template
-		$query = "INSERT INTO author ()/ VALUES /* :value values for those arguments here */";
+		$query = "INSERT INTO author ()/ VALUES /* :value values for those arguments here ";
 		$statement = $pdo->prepare($query);
 
 		// bind the member variables to the place holder template
-		$parameters = ["authorID" => $this->authorID->getBytes(), "authorBio" => $this->authorBio, "authorEmail" =>
+		$parameters = ["authorId" => $this->authorId->getBytes(), "authorBio" => $this->authorBio, "authorEmail" =>
 			$this->authorEmail, "authorImage" => $this->authorImage, "authorName" => $this->authorName];
 		$statement->execute($parameters);
 	}
 
+	*/
+
 }
 
-$testAuthor = new Author;
-$testTest = getAuthorID($testAuthor);
 
 
-echo $testTest;
+$testAuthor= new Author();
+
+$testTest = $testAuthor->getauthorId();
+
+$talkToMe = var_dump($testTest);
+
