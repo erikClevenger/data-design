@@ -13,8 +13,7 @@ require_once ("ValidateUuid.php");
  * @version 1.0.0
  *
  **/
-
-class Author implements \JsonSerializable {
+class author{
 	use \Edu\Cnm\DataDesign\ValidateUuid;
 
 	/**
@@ -61,34 +60,33 @@ class Author implements \JsonSerializable {
 	 *
 	 * Takes an argument of an array. Within the array arguments can
 	 *
-	 * @param string|Uuid $authorId of author
-	 * @param string|null $uthorBio A string containing the author's bio
-	 * @param string $authorEmail providing the author's email
-	 * @param string $authorHash containing the authentication hash
-	 * @param string|null $authorImage an image of the author
-	 * @param string $authorName a string containg the author's name
+	 * @param string|Uuid $newAuthorId of author
+	 * @param string|null $newAuthorBio A string containing the author's bio
+	 * @param string $newAuthorEmail providing the author's email
+	 * @param int $newAuthorHash containing the authentication hash
+	 * @param string|null $newAuthorImage an image of the author
+	 * @param string $newAuthorName a string containg the author's name
 	 * @throws \InvalidArgumentException if data types are not valid
 	 * @throws \RangeException if data values are out of bounds (e.g., strings too long, negative integers)
 	 * @throws \TypeError if data types violate type hints
 	 * @throws \Exception if some other exception occurs
 	 **/
 
-	public function __construct($args = []) {
+	public function __construct(Uuid $newAuthorId, string $newAuthorBio, string $newAuthorEmail, int $newAuthorHash,
+										 string $newAuthorImage, string $newAuthorName) {
 		try {
-			$this->authorId = ['uuid'];
-			$this->authorBio = ['bio'] ?? NULL;
-			$this->authorEmail = ['email'];
-			$this->authorHash = ['hash'];
-			$this->authorImage = ['image'] ?? NULL;
-			$this->authorName = ['name'];
-			}
-			//determine what exception type was thrown
+			$this->authorId($newAuthorId);
+			$this->authorBio($newAuthorBio);
+			$this->authorEmail($newAuthorEmail);
+			$this->authorHash($newAuthorHash);
+			$this->authorImage($newAuthorImage);
+			$this->authorName($newAuthorName);
+		} //determine what exception type was thrown
 		catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
 			$exceptionType = get_class($exception);
 			throw(new $exceptionType($exception->getMessage(), 0, $exception));
 		}
 	}
-
 
 
 	/**
@@ -130,7 +128,7 @@ class Author implements \JsonSerializable {
 	 * @return string
 	 */
 	public function getAuthorEmail(): string {
-		return($this->authorEmail);
+		return ($this->authorEmail);
 	}
 
 	/**
@@ -144,7 +142,7 @@ class Author implements \JsonSerializable {
 	 * @return string
 	 */
 	public function getAuthorHash(): string {
-		return($this->authorHash);
+		return ($this->authorHash);
 	}
 
 	/**
@@ -184,17 +182,6 @@ class Author implements \JsonSerializable {
 
 
 	/**
-	 * Specify data which should be serialized to JSON
-	 * @link http://php.net/manual/en/jsonserializable.jsonserialize.php
-	 * @return mixed data which can be serialized by <b>json_encode</b>,
-	 * which is a value of any type other than a resource.
-	 * @since 5.4.0
-	 */
-	public function jsonSerialize() {
-		// TODO: Implement jsonSerialize() method.
-	}
-
-	/**
 	 * Inserts this Author into mySQL
 	 *
 	 * @param \PDO $pdo PDO connection object
@@ -202,28 +189,62 @@ class Author implements \JsonSerializable {
 	 * @throws \TypeError if $pdo is not a PDO connection object
 	 **/
 
-	/*
 
-	public function insert(\PDO $pdo) : void {
-		//query template
-		$query = "INSERT INTO author ()/ VALUES /* :value values for those arguments here ";
+		public function insert(\PDO $pdo) : void {
+			//query template
+			$query = "INSERT INTO author(authorId, authorBio, authorEmail, authorHash, authorImage, authorName) VALUES (:authorId, :authorBio, :authorEmail, :authorHash, :authorImage, :authorName)";
+			$statement = $pdo->prepare($query);
+
+			// bind the member variables to the place holder template
+			$parameters = ["authorId" => $this->authorId->getBytes(), "authorBio" => $this->authorBio, "authorEmail" =>
+				$this->authorEmail, "authorImage" => $this->authorImage, "authorName" => $this->authorName];
+			$statement->execute($parameters);
+		}
+
+
+	/**
+	 *
+	 * Delete this Author from mySQL
+	 *
+	 * @param PDO $pdo PDO connection object
+	 * @throws \PDOException when mySQL related errors occur
+	 * @throws \TypeError if $pdo is not a PDO connection object
+	 */
+	public function delete(\PDO $pdo) : void {
+
+		// create query template
+		$query = "DELETE FROM author WHERE authorId = :authorId";
 		$statement = $pdo->prepare($query);
 
-		// bind the member variables to the place holder template
-		$parameters = ["authorId" => $this->authorId->getBytes(), "authorBio" => $this->authorBio, "authorEmail" =>
-			$this->authorEmail, "authorImage" => $this->authorImage, "authorName" => $this->authorName];
+		// bind the member variables to the place holder in the template
+		$parameters = ["tweetId" => $this->authorId->getBytes()];
 		$statement->execute($parameters);
 	}
 
-	*/
+	/**
+	 * updates this Tweet in mySQL
+	 *
+	 * @param \PDO $pdo PDO connection object
+	 * @throws \PDOException when mySQL related errors occur
+	 * @throws \TypeError if $pdo is not a PDO connection object
+	 **/
+	public function update(\PDO $pdo) : void {
+
+		// create query template
+		$query = "UPDATE author SET authorId = :authorId, authorBio = :authorBio, authorEmail = :authorEmail, authorHash = :authorHash, authorImage = :authorImage, authorName = :authorName WHERE authorId = :authorId";
+		$statement = $pdo->prepare($query);
+
+
+
+		$parameters = ["authorId" => $this->authorId->getBytes(),"authorBio" => $this->authorBio, "authorEmail" =>
+			$this->authorEmail, "authorHash" => $this->authorHash->getBytes(), "authorImage" => $this->authorImage, "authorName" => $this->authorName ];
+		$statement->execute($parameters);
+	}
 
 }
 
 
 
-$testAuthor= new Author();
 
-$testTest = $testAuthor->getauthorId();
 
-$talkToMe = var_dump($testTest);
 
