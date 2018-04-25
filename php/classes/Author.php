@@ -2,6 +2,14 @@
 // temp fix
 require_once ("ValidateUuid.php");
 
+//TODO add FILTER_SANITIZE to setters
+
+//TODO finish doc blocks
+//TODO lookup GD php library
+
+
+
+
 /**
  * This is the primary profile type for authors
  *
@@ -18,7 +26,7 @@ class author{
 
 	/**
 	 * id for this Author; this is the primary key
-	 * @var uuid $authorId
+	 * @var Uuid $authorId
 	 *
 	 **/
 	protected $authorId;
@@ -38,7 +46,7 @@ class author{
 
 	/**
 	 * The hash used for password encryption; user authentication
-	 * @var char(97) $authorHash
+	 * @var string $authorHash
 	 **/
 	protected $authorHash;
 
@@ -56,7 +64,7 @@ class author{
 
 	/**
 	 *
-	 * Constructor for this Tweet
+	 * Constructor for this author
 	 *
 	 * Takes an argument of an array. Within the array arguments can
 	 *
@@ -92,14 +100,14 @@ class author{
 	/**
 	 * @return uuid
 	 */
-	public function getauthorId(): Uuid {
+	public function getAuthorId(): Uuid {
 		return ($this->authorId);
 	}
 
 	/**
 	 * @param uuid $authorId
 	 */
-	public function setauthorId($authorId): void {
+	public function setAuthorId($authorId): void {
 		try {
 			$uuid = self::validateUuid($authorId);
 		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
@@ -217,12 +225,12 @@ class author{
 		$statement = $pdo->prepare($query);
 
 		// bind the member variables to the place holder in the template
-		$parameters = ["tweetId" => $this->authorId->getBytes()];
+		$parameters = ["authorId" => $this->authorId->getBytes()];
 		$statement->execute($parameters);
 	}
 
 	/**
-	 * updates this Tweet in mySQL
+	 * updates this Author in mySQL
 	 *
 	 * @param \PDO $pdo PDO connection object
 	 * @throws \PDOException when mySQL related errors occur
