@@ -135,7 +135,7 @@ class author implements \JsonSerializable {
 	/**
 	 *Sets the sanitized author bio.
 	 *
-	 * @param string $authorBio
+	 * @param string $newAuthorBio
 	 */
 	public function setAuthorBio(string $newAuthorBio): void {
 		$newAuthorBio = trim($newAuthorBio);
@@ -158,7 +158,6 @@ class author implements \JsonSerializable {
 		return ($this->authorEmail);
 	}
 
-	//TODO Degug the following....
 
 	/**
 	 * inserts the author's email in mySQL
@@ -335,6 +334,13 @@ class author implements \JsonSerializable {
 		$parameters = ["authorId" => $this->authorId->getBytes(),"authorBio" => $this->authorBio, "authorEmail" =>
 			$this->authorEmail, "authorHash" => $this->authorHash->getBytes(), "authorImage" => $this->authorImage, "authorName" => $this->authorName ];
 		$statement->execute($parameters);
+	}
+
+	public function jsonSerialize() :array {
+		$fields = get_object_vars($this);
+
+		$fields["authorId"] = $this->authorId->toString();
+		return ($fields);
 	}
 
 }
