@@ -1,13 +1,7 @@
 <?php
 // temp fix
 require_once ("ValidateUuid.php");
-
-//TODO add FILTER_SANITIZE to setters
-
-//TODO finish doc blocks
-//TODO lookup GD php library
-
-
+use Ramsey\Uuid\Uuid;
 
 
 /**
@@ -21,11 +15,13 @@ require_once ("ValidateUuid.php");
  * @version 1.0.0
  *
  **/
-class author{
-	use \Edu\Cnm\DataDesign\ValidateUuid;
+
+class author implements \JsonSerializable {
+	use \ValidateUuid;
 
 	/**
 	 * id for this Author; this is the primary key
+	 *
 	 * @var Uuid $authorId
 	 *
 	 **/
@@ -33,6 +29,7 @@ class author{
 
 	/**
 	 * a brief section of information about the author of an article
+	 *
 	 * @var string $authorBio
 	 **/
 	protected $authorBio;
@@ -83,12 +80,12 @@ class author{
 	public function __construct(Uuid $newAuthorId, string $newAuthorBio, string $newAuthorEmail, int $newAuthorHash,
 										 string $newAuthorImage, string $newAuthorName) {
 		try {
-			$this->authorId($newAuthorId);
-			$this->authorBio($newAuthorBio);
-			$this->authorEmail($newAuthorEmail);
-			$this->authorHash($newAuthorHash);
-			$this->authorImage($newAuthorImage);
-			$this->authorName($newAuthorName);
+			$this->setAuthorId($newAuthorId);
+			$this->setAuthorBio($newAuthorBio);
+			$this->setAuthorEmail($newAuthorEmail);
+			$this->setAuthorHash($newAuthorHash);
+			$this->setAuthorImage($newAuthorImage);
+			$this->setAuthorName($newAuthorName);
 		} //determine what exception type was thrown
 		catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
 			$exceptionType = get_class($exception);
@@ -98,14 +95,22 @@ class author{
 
 
 	/**
-	 * @return uuid
+	 * Fetches the author's ID from mySQL,
+	 *
+	 * @return Uuid
 	 */
 	public function getAuthorId(): Uuid {
 		return ($this->authorId);
 	}
 
 	/**
-	 * @param uuid $authorId
+	 * Sets the author's primary key/ Id number
+	 *
+	 * @param Uuid $authorId
+	 * @throws \InvalidArgumentException if data types are not valid
+	 * @throws \RangeException if data values are out of bounds (e.g., strings too long, negative integers)
+	 * @throws \TypeError if data types violate type hints
+	 * @throws \Exception if some other exception occurs
 	 */
 	public function setAuthorId($authorId): void {
 		try {
@@ -119,6 +124,8 @@ class author{
 	}
 
 	/**
+	 * accessor method for the author bio
+	 *
 	 * @return string
 	 */
 	public function getAuthorBio(): string {
@@ -126,27 +133,62 @@ class author{
 	}
 
 	/**
+	 *Sets the sanitized author bio.
+	 *
 	 * @param string $authorBio
 	 */
-	public function setAuthorBio(string $authorBio): void {
-		$this->authorBio = $authorBio;
+	public function setAuthorBio(string $newAuthorBio): void {
+		$newAuthorBio = trim($newAuthorBio);
+		$newAuthorBio = filter_var($newAuthorBio, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+		if (empty($newAuthorBio) === true) {
+			echo "No Bio";
+		}
+		if (strlen($newAuthorBio > 140) === true) {
+			echo "The bio is too long, try to keep is short and sweet (as in 140 characters).";
+		}
+		$this->authorBio = $newAuthorBio;
 	}
 
 	/**
+	 * accessor method for author email
+	 *
 	 * @return string
 	 */
 	public function getAuthorEmail(): string {
 		return ($this->authorEmail);
 	}
 
-	/**
-	 * @param string $authorEmail
-	 */
-	public function setAuthorEmail(string $authorEmail): void {
-		$this->authorEmail = $authorEmail;
-	}
+	//TODO Degug the following....
 
 	/**
+	 * inserts the author's email in mySQL
+	 *
+	 * @param string $newAuthorEmail
+	 * @throws \InvalidArgumentException if $newFanEmail is not a valid email or insecure
+	 * @throws \RangeException if $newEmail is > 128 characters
+	 * @throws \TypeError if $newEmail is not a string
+	 */
+	public function setAuthorEmail(string $newAuthorEmail): void {
+		$authorEmail = (trim($newAuthorEmail));
+		$authorEmail = filter_var($authorEmail, FILTER_VALIDATE_EMAIL);
+		//validate email
+		if(empty($authorEmail) === true) {
+			throw (new \InvalidArgumentException("Sorry,'$authorEmail' doesn't seem to work."));
+		}
+		//check string length
+		if(strlen($authorEmail) > 128) {
+			throw (new \RangeException("Sorry, '$authorEmail' contains too many characters"));
+		}
+		//store email string
+		$this->authorEmail = $newAuthorEmail;
+	}
+
+
+
+	/**
+	 *
+	 * Returns the author's profile password hash
+	 *
 	 * @return string
 	 */
 	public function getAuthorHash(): string {
@@ -154,13 +196,40 @@ class author{
 	}
 
 	/**
-	 * @param string $authorHash
+	 *
+	 * Mutator method for the author's profile password hash.
+	 *
+	 * @param string $newAuthorHash
+	 * @throws \InvalidArgumentException if the hash is not secure
+	 * @throws \RangeException if the hash is not 87 characters
+	 * @throws \TypeError if profile hash is not a string
 	 */
-	public function setAuthorHash(string $authorHash): void {
-		$this->authorHash = $authorHash;
+
+	//Fully Bamboozled from @brentTheDev Brent Kai
+
+	public function setAuthorHash(string $newAuthorHash): void {
+		//enforce that the hash is properly formatted
+		$newAuthorHash = trim($newAuthorHash);
+		$newAuthorHash = strtolower($newAuthorHash);
+		if(empty($newAuthorHash) === true) {
+			throw(new \InvalidArgumentException("profile password hash empty or insecure"));
+		}
+		//enforce that the hash is a string representation of a hexadecimal
+		if(!ctype_xdigit($newAuthorHash)) {
+			throw(new \InvalidArgumentException("profile password hash is empty or insecure"));
+		}
+		//enforce that the hash is exactly 97 characters.
+		if(strlen($newAuthorHash) !== 97) {
+			throw(new \RangeException("profile hash must be 128 characters"));
+		}
+		//store the hash
+		$this->AuthorHash = $newAuthorHash;
 	}
 
 	/**
+	 *
+	 * Return a processed image
+	 *
 	 * @return string
 	 */
 	public function getAuthorImage(): string {
@@ -168,6 +237,8 @@ class author{
 	}
 
 	/**
+	 * Validates and sanitizes image image data
+	 *
 	 * @param string $authorImage
 	 */
 	public function setAuthorImage(string $authorImage): void {
@@ -175,6 +246,8 @@ class author{
 	}
 
 	/**
+	 * Accessor for the author's name.
+	 *
 	 * @return string
 	 */
 	public function getAuthorName(): string {
@@ -182,10 +255,25 @@ class author{
 	}
 
 	/**
-	 * @param string $authorName
+	 * Sanitizes, Validates author's name string
+	 *
+	 * @param string $newAuthorName
+	 * @throw \InvalidArgumentException if $newAuthorName is not a valid object or string
+	 * @throw \RangeException if $newAuthorName is > 32 characters
 	 */
-	public function setAuthorName(string $authorName): void {
-		$this->authorName = $authorName;
+	public function setAuthorName(string $newAuthorName): void {
+		$newAuthorName = trim($newAuthorName);
+		$newAuthorName = filter_var($newAuthorName, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+
+		if(empty($newAuthorName) === true) {
+			throw (new \InvalidArgumentException("Sorry,'$newAuthorName' doesn't seem to work."));
+		}
+		//check string length
+		if(strlen($newAuthorName) > 32) {
+			throw (new \RangeException("Sorry, '$newAuthorName' contains too many characters."));
+		}
+
+		$this->authorEmail = $newAuthorName;
 	}
 
 
