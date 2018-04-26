@@ -77,7 +77,7 @@ class author implements \JsonSerializable {
 	 * @throws \Exception if some other exception occurs
 	 **/
 
-	public function __construct(Uuid $newAuthorId, string $newAuthorBio, string $newAuthorEmail, int $newAuthorHash,
+	public function __construct(string $newAuthorId, string $newAuthorBio, string $newAuthorEmail, string $newAuthorHash,
 										 string $newAuthorImage, string $newAuthorName) {
 		try {
 			$this->setAuthorId($newAuthorId);
@@ -86,10 +86,10 @@ class author implements \JsonSerializable {
 			$this->setAuthorHash($newAuthorHash);
 			$this->setAuthorImage($newAuthorImage);
 			$this->setAuthorName($newAuthorName);
-		} //determine what exception type was thrown
-		catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
-			$exceptionType = get_class($exception);
-			throw(new $exceptionType($exception->getMessage(), 0, $exception));
+		} //identify thrown exceptions
+	catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
+		$exceptionType = get_class($exception);
+		throw(new $exceptionType($exception->getMessage(), 0, $exception));
 		}
 	}
 
@@ -338,6 +338,8 @@ class author implements \JsonSerializable {
 
 	public function jsonSerialize() :array {
 		$fields = get_object_vars($this);
+		unset($fields["authorId"]);
+		unset($fields["authorHash"]);
 
 		$fields["authorId"] = $this->authorId->toString();
 		return ($fields);
