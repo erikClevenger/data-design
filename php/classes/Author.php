@@ -197,14 +197,14 @@ class author implements \JsonSerializable {
 	/**
 	 *
 	 * Mutator method for the author's profile password hash.
+	 * Bamboozled from Brent Kai
+	 * @see https://github.com/brentTheDev/data-design
 	 *
 	 * @param string $newAuthorHash
 	 * @throws \InvalidArgumentException if the hash is not secure
 	 * @throws \RangeException if the hash is not 87 characters
 	 * @throws \TypeError if profile hash is not a string
 	 */
-
-	//Fully Bamboozled from @brentTheDev Brent Kai
 
 	public function setAuthorHash(string $newAuthorHash): void {
 		//enforce that the hash is properly formatted
