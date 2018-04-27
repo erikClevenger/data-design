@@ -80,11 +80,10 @@ class Article implements \JsonSerializable {
 	 * @throws \Exception if some other exception occurs
 	 **/
 
-	public function __construct(string $newArticleId, string $newArticleAuthorId, string $newArticleBannerImg, string
+	public function __construct(string $newArticleId, string $newArticleBannerImg, string
 	$newArticleContent, string $newArticleDate, string $newArticleTags, string $newArticleTitle) {
 	try {
-		$this->setAuthorId($newArticleId);
-		$this->setArticleAuthorId($newArticleAuthorId);
+		$this->setArticleId($newArticleId);
 		$this->setArticleBannerImg($newArticleBannerImg);
 		$this->setArticleContent($newArticleContent);
 		$this->setArticleDate($newArticleDate);
@@ -116,7 +115,7 @@ class Article implements \JsonSerializable {
 	 */
 	public function setArticleId($articleId): void {
 		try {
-			$uuid = self::validateUuid($articleId);
+			$uuid = self::ValidateUuid($articleId);
 		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
 			$exceptionType = get_class($exception);
 			throw new $exceptionType($exception->getMessage(), 0, $exception);
@@ -160,12 +159,6 @@ class Article implements \JsonSerializable {
 	public function setArticleText(string $newArticleText): void {
 		$newArticleText = trim($newArticleText);
 		$newArticleText = filter_var($newArticleText, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-		if (empty($newArticleText) === true) {
-			echo "No Bio";
-		}
-		if (strlen($newArticleText > 140) === true) {
-			echo "The bio is too long, try to keep is short and sweet (as in 140 characters).";
-		}
 		$this->articleText = $newArticleText;
 	}
 
@@ -188,8 +181,10 @@ class Article implements \JsonSerializable {
 	 * @throws \Exception if some other exception occurs
 	 */
 	public function setArticleDate(string $articleDate): void {
+		date_default_timezone_set('America/Denver');
+
 		try {
-			$date = self::validateDate($articleDate);
+			$articleDate = self::ValidateDate($articleDate);
 		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
 			$exceptionType = get_class($exception);
 			throw new $exceptionType($exception->getMessage(), 0, $exception);
@@ -198,6 +193,8 @@ class Article implements \JsonSerializable {
 	}
 
 	/**
+	 * Gets the article's tags
+	 * 
 	 * @return string
 	 */
 	public function getArticleTags(): string {
@@ -205,13 +202,28 @@ class Article implements \JsonSerializable {
 	}
 
 	/**
-	 * @param string $articleTags
+	 * mutator method for article tags.
+	 *
+	 * @param string $newArticleTags
 	 */
-	public function setArticleTags(string $articleTags): void {
-		$this->articleTags = $articleTags;
+	public function setArticleTags(string $newArticleTags): void {
+		//extract tags from potential strings
+		$newArticleTags = preg_match_all('/#([\p{L}\p{Mn}]+)/u',$newArticleTags,$matches);
+		//trim spaces and sanitize the string put out by the regex above
+		$newArticleTags = trim($newArticleTags);
+		$newArticleTags = filter_var($newArticleTags, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+		if (empty($newArticleTags) === true) {
+			echo "No Tags?";
+		}
+		if (strlen($newArticleTags > 20) === true) {
+			echo "Lets not get overzealous with the tags here. 20 Characters should do it";
+		}
+		$this->articleTags = $newArticleTags;
 	}
 
 	/**
+	 * Gets the article's title
+	 *
 	 * @return string
 	 */
 	public function getArticleTitle(): string {
@@ -219,10 +231,20 @@ class Article implements \JsonSerializable {
 	}
 
 	/**
-	 * @param string $articleTitle
+	 * Sanitizes and sets the article's title.
+	 *
+	 * @param string $newArticleTitle
 	 */
-	public function setArticleTitle(string $articleTitle): void {
-		$this->articleTitle = $articleTitle;
+	public function setArticleTitle(string $newArticleTitle): void {
+		$newArticleTitle = trim($newArticleTitle);
+		$newArticleTitle = filter_var($newArticleTitle, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+		if (empty($newArticleTitle) === true) {
+			echo "No Title!?";
+		}
+		if (strlen($newArticleTitle > 140) === true) {
+			echo "The title is too long, try to keep is short and sweet (as in 140 characters).";
+		}
+		$this->articleTitle = $newArticleTitle;
 	}
 
 
